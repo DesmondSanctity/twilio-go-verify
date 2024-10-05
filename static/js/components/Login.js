@@ -34,18 +34,17 @@ const Login = {
     await this.sendSMSOTP();
     this.$router.push('/sms-verification');
    } catch (error) {
-    alert('Login failed: ' + error.response.data);
+    alert('Login failed: ' + error);
    }
   },
   async sendSMSOTP() {
    try {
     const user = JSON.parse(localStorage.getItem('user'));
-    const sms = await axios.post('/api/verify/send-sms', {
+    await axios.post('/api/verify/send-sms', {
      email: user.email,
     });
-    console.log('SMS:', sms.data);
    } catch (error) {
-    alert('Failed to send SMS OTP: ' + error.response.data);
+    alert('Failed to send SMS OTP: ' + error);
    }
   },
  },

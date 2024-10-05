@@ -72,15 +72,21 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Create a response struct with the user information you want to send
 	response := struct {
-		ID          string `json:"id"`
-		Name        string `json:"name"`
-		Email       string `json:"email"`
-		PhoneNumber string `json:"phoneNumber"`
+		ID              string `json:"id"`
+		Name            string `json:"name"`
+		Email           string `json:"email"`
+		PhoneNumber     string `json:"phoneNumber"`
+		SMSEnabled      bool   `json:"smsEnabled"`
+		TOTPEnabled     bool   `json:"totpEnabled"`
+		IsAuthenticated bool   `json:"isAuthenticated"`
 	}{
-		ID:          user.ID,
-		Name:        user.Name,
-		Email:       user.Email,
-		PhoneNumber: user.PhoneNumber,
+		ID:              user.ID,
+		Name:            user.Name,
+		Email:           user.Email,
+		PhoneNumber:     user.PhoneNumber,
+		SMSEnabled:      user.SMSEnabled,
+		TOTPEnabled:     user.TOTPEnabled,
+		IsAuthenticated: user.IsAuthenticated,
 	}
 
 	w.Header().Set("Content-Type", "application/json")

@@ -16,6 +16,7 @@ const SMSVerification = {
  data() {
   return {
    code: '',
+   user: JSON.parse(localStorage.getItem('user')),
   };
  },
  methods: {
@@ -26,9 +27,11 @@ const SMSVerification = {
      email: user.email,
      code: this.code,
     });
+    this.user.smsEnabled = true;
+    localStorage.setItem('user', JSON.stringify(this.user));
     this.$router.push('/authy-setup');
    } catch (error) {
-    alert('SMS verification failed: ' + error.response.data);
+    alert('SMS verification failed: ' + error);
    }
   },
  },

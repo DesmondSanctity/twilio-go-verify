@@ -7,7 +7,6 @@ import (
 
 	"github.com/desmomndsanctity/twilio-go-verify/internal/store"
 	"github.com/desmomndsanctity/twilio-go-verify/internal/twilio"
-	// "github.com/desmomndsanctity/twilio-go-verify/utils"
 )
 
 type VerifyHandler struct {
@@ -81,6 +80,12 @@ func (h *VerifyHandler) VerifySMSOTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user.SMSEnabled = true
+	if err := h.store.UpdateUser(user); err != nil {
+		http.Error(w, "Failed to update user", http.StatusInternalServerError)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -113,12 +118,6 @@ func (h *VerifyHandler) CreateTOTPFactor(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// qrCode, err := utils.GenerateQRCode(uri, 256)
-	// if err != nil {
-	// 	http.Error(w, "Failed to generate QR code", http.StatusInternalServerError)
-	// 	return
-	// }
-
 	response := QRResponse{
 		QRCode:    uri,
 		FactorSid: sid,
@@ -140,7 +139,6 @@ func (h *VerifyHandler) VerifyFactor(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := h.store.GetUserByEmail(req.Email)
-	log.Printf("User: %+v", user)
 	if err != nil {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
@@ -185,10 +183,16 @@ func (h *VerifyHandler) CreateTOTPChallenge(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	challengeSid, err := h.twilio.CreateTOTPChallenge(user.TOTPFactorSid, req.Code, user.Name)
+	challengeSid, err := h.twilio.CreateTOTPChallenge(user.TOTPFactorSid, req.Code, user.ID)
 	if err != nil {
 		log.Printf("Failed to create TOTP challenge: %v", err)
 		http.Error(w, "Failed to create TOTP challenge", http.StatusInternalServerError)
+		return
+	}
+
+	user.IsAuthenticated = true
+	if err := h.store.UpdateUser(user); err != nil {
+		http.Error(w, "Error updating user", http.StatusInternalServerError)
 		return
 	}
 

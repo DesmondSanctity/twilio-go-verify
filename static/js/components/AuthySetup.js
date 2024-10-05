@@ -12,8 +12,8 @@ const AuthySetup = {
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="code">Enter Authy Code</label>
                         <input class="form-input" id="code" v-model="code" type="text" required>
                     </div>
-                    <button v-if="!user.TOTPEnabled" class="btn" type="submit">Enable TOTP</button>
-                <button v-else class="btn" @click.prevent="createChallenge">Verify Challenge</button>
+                    <button v-if="!user.totpEnabled" class="btn" type="submit">Enable TOTP</button>
+                <button v-else class="btn" @click.prevent="createTOTPChallenge">Verify Challenge</button>
                 </form>
             </div>
         </div>
@@ -22,13 +22,12 @@ const AuthySetup = {
   return {
    qrCodeUrl: '',
    code: '',
-   factorSid: '',
    user: JSON.parse(localStorage.getItem('user')),
-   showTOTPChallenge: JSON.parse(localStorage.getItem('user')).TOTPEnabled,
+   showTOTPChallenge: JSON.parse(localStorage.getItem('user')).totpEnabled,
   };
  },
  async mounted() {
-  if (!this.user.TOTPEnabled) {
+  if (!this.user.totpEnabled) {
    await this.createTOTPFactor();
   }
  },
@@ -39,12 +38,10 @@ const AuthySetup = {
     const response = await axios.post('/api/verify/create-totp', {
      email: user.email,
     });
-    console.log(response.data);
     const qr = await qrcode(0, 'M');
     qr.addData(response.data.qrCode);
     qr.make();
     this.qrCodeUrl = qr.createDataURL(4);
-    this.factorSid = response.data.factorSid;
    } catch (error) {
     alert('Failed to create TOTP factor: ' + error.response.data);
    }
@@ -56,7 +53,8 @@ const AuthySetup = {
      email: user.email,
      code: this.code,
     });
-    this.user.TOTPEnabled = true;
+    this.user.totpEnabled = true;
+    this.user.isAuthenticated = true;
     localStorage.setItem('user', JSON.stringify(this.user));
     this.$router.push('/dashboard');
    } catch (error) {
@@ -68,7 +66,9 @@ const AuthySetup = {
     await axios.post('/api/verify/create-totp-challenge', {
      email: this.user.email,
     });
-    this.showTOTPChallenge = true;
+    this.user.isAuthenticated = true;
+    localStorage.setItem('user', JSON.stringify(this.user));
+    this.$router.push('/dashboard');
    } catch (error) {
     alert('Failed to create TOTP challenge: ' + error.response.data);
    }

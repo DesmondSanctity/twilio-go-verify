@@ -30,21 +30,25 @@ func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !user.IsAuthenticated {
-		http.Error(w, "User is not authenticated", http.StatusUnauthorized)
-		return
-	}
+	// if !user.IsAuthenticated {
+	// 	http.Error(w, "User is not authenticated", http.StatusUnauthorized)
+	// 	return
+	// }
 
 	response := struct {
-		Name        string `json:"name"`
-		Email       string `json:"email"`
-		SMSEnabled  bool   `json:"smsEnabled"`
-		TOTPEnabled bool   `json:"totpEnabled"`
+		Name            string `json:"name"`
+		Email           string `json:"email"`
+		SMSEnabled      bool   `json:"smsEnabled"`
+		TOTPEnabled     bool   `json:"totpEnabled"`
+		TOTPFactorSid   string `json:"totpFactorSid"`
+		IsAuthenticated bool   `json:"isAuthenticated"`
 	}{
-		Name:        user.Name,
-		Email:       user.Email,
-		SMSEnabled:  user.SMSEnabled,
-		TOTPEnabled: user.TOTPEnabled,
+		Name:            user.Name,
+		Email:           user.Email,
+		SMSEnabled:      user.SMSEnabled,
+		TOTPEnabled:     user.TOTPEnabled,
+		TOTPFactorSid:   user.TOTPFactorSid,
+		IsAuthenticated: user.IsAuthenticated,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
