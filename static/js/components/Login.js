@@ -6,13 +6,16 @@ const Login = {
                 <form @submit.prevent="login">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
-                        <input class="form-input" id="email" v-model="email" type="email" required>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="email" v-model="email" type="email" required>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password</label>
-                        <input class="form-input" id="password" v-model="password" type="password" required>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password" v-model="password" type="password" required>
                     </div>
-                    <button class="btn" type="submit">Login</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">Login</button>
                 </form>
             </div>
         </div>

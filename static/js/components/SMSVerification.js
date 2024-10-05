@@ -6,9 +6,11 @@ const SMSVerification = {
                 <form @submit.prevent="verifySMS">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="code">Enter SMS Code</label>
-                        <input class="form-input" id="code" v-model="code" type="text" required>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="code" v-model="code" type="text" required>
                     </div>
-                    <button class="btn" type="submit">Verify</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">Verify</button>
                 </form>
             </div>
         </div>
@@ -18,6 +20,13 @@ const SMSVerification = {
    code: '',
    user: JSON.parse(localStorage.getItem('user')),
   };
+ },
+ async mounted() {
+  if (!this.user) {
+   alert('Login or signup first!');
+   this.$router.push('/');
+   return;
+  }
  },
  methods: {
   async verifySMS() {

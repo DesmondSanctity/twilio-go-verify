@@ -4,7 +4,7 @@ const Dashboard = {
             <div class="p-8">
                 <h2 class="text-2xl font-bold mb-4">Welcome, {{ user?.name }}!</h2>
                 <p class="mb-4">You have successfully logged in and completed the 2FA setup.</p>
-                <button @click="logout" class="btn">Logout</button>
+                <button @click="logout" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Logout</button>
             </div>
         </div>
     `,
