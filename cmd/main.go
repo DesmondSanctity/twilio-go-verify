@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/desmomndsanctity/twilio-go-verify/internal/handlers"
 	"github.com/desmomndsanctity/twilio-go-verify/internal/store"
 	"github.com/desmomndsanctity/twilio-go-verify/internal/twilio"
 	"github.com/gorilla/mux"
@@ -29,26 +28,8 @@ func main() {
 		os.Getenv("TWILIO_VERIFY_SID"),
 	)
 
-	// Initialize handlers
-	authHandler := handlers.NewAuthHandler(inMemoryStore, twilioVerify)
-	verifyHandler := handlers.NewVerifyHandler(inMemoryStore, twilioVerify)
-	userHandler := handlers.NewUserHandler(inMemoryStore)
-
 	// Set up router
 	r := mux.NewRouter()
-
-	// Auth routes
-	r.HandleFunc("/api/signup", authHandler.SignUp).Methods("POST")
-	r.HandleFunc("/api/login", authHandler.Login).Methods("POST")
-	r.HandleFunc("/api/logout", authHandler.Logout).Methods("POST")
-	r.HandleFunc("/api/verify/send-sms", verifyHandler.SendSMSOTP).Methods("POST")
-	r.HandleFunc("/api/verify/verify-sms", verifyHandler.VerifySMSOTP).Methods("POST")
-	r.HandleFunc("/api/verify/create-totp", verifyHandler.CreateTOTPFactor).Methods("POST")
-	r.HandleFunc("/api/verify/verify-factor", verifyHandler.VerifyFactor).Methods("POST")
-	r.HandleFunc("/api/verify/create-totp-challenge", verifyHandler.CreateTOTPChallenge).Methods("POST")
-
-	// User routes
-	r.HandleFunc("/api/user", userHandler.GetUserInfo).Methods("GET")
 
 	// Serve static files
 	r.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
