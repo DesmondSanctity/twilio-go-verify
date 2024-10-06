@@ -30,11 +30,6 @@ func (h *UserHandler) GetUserInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if !user.IsAuthenticated {
-	// 	http.Error(w, "User is not authenticated", http.StatusUnauthorized)
-	// 	return
-	// }
-
 	response := struct {
 		Name            string `json:"name"`
 		Email           string `json:"email"`
